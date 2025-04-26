@@ -70,47 +70,31 @@ _PD_EventInfomation.setupCommand = function(event) {
     var list = event.page().list;
     var index = 0;
     while(list[index].code === 108 || list[index].code === 408){
-        const lowercase = list[index].parameters[0].toLowerCase();
-        if (lowercase.startsWith("info:") || lowercase.startsWith("info：")) {
-            var param = list[index].parameters[0].substr(5).split(',');
-            var preText = param[0];
-            var newText = _PD_EventInfomation.convertEscapeCharacters(param[0]);
-            if(newText !== preText) _PD_EventInfomation.changeVariables[event._eventId] = true;
-            _PD_EventInfomation.setInformation(event._eventId, newText, parseInt(param[1]));
-        }
-        else if (lowercase.startsWith("infomove:") || lowercase.startsWith("infomove：")) {
-            var param = lowercase.substr(9).split(',');
-            var infoSprite = _PD_EventInfomation.infoSprite[event._eventId];
-            if(infoSprite){
-                infoSprite.x += parseInt(param[0]);
-                infoSprite.y += parseInt(param[1]);
+        var command = list[index].parameters[0].toLowerCase().replace(/　/g," ").split(' ');
+        for(var i = 0, len = command.length; i < len; i++){
+            var param = command[i].replace(/:/g,',').replace(/：/g,',').split(',');
+            switch(param[0]){
+                case 'info':
+                    var preText = param[1];
+                    var newText = _PD_EventInfomation.convertEscapeCharacters(param[1]);
+                    if(newText !== preText) _PD_EventInfomation.changeVariables[event._eventId] = true;
+                    _PD_EventInfomation.setInformation(event._eventId, newText, parseInt(param[2]));
+                    break;
+                case 'infomove':
+                    var infoSprite = _PD_EventInfomation.infoSprite[event._eventId];
+                    if(infoSprite){
+                        infoSprite.x += parseInt(param[1]);
+                        infoSprite.y += parseInt(param[2]);
+                    }
+                    break;
             }
         }
-        // var command = list[index].parameters[0].toLowerCase().replace(/　/g," ").split(' ');
-        // for(var i = 0, len = command.length; i < len; i++){
-        //     var param = command[i].replace(/:/g,',').replace(/：/g,',').split(',');
-        //     switch(param[0]){
-        //         case 'info':
-        //             var preText = param[1];
-        //             var newText = _PD_EventInfomation.convertEscapeCharacters(param[1]);
-        //             if(newText !== preText) _PD_EventInfomation.changeVariables[event._eventId] = true;
-        //             _PD_EventInfomation.setInformation(event._eventId, newText, parseInt(param[2]));
-        //             break;
-        //         case 'infomove':
-        //             var infoSprite = _PD_EventInfomation.infoSprite[event._eventId];
-        //             if(infoSprite){
-        //                 infoSprite.x += parseInt(param[1]);
-        //                 infoSprite.y += parseInt(param[2]);
-        //             }
-        //             break;
-        //     }
-        // }
         index = index + 1;
     }
 };
 
 _PD_EventInfomation.setInformation = function(eventId, text, fontSize) {
-    var charCount = 0;
+    var charCount = 0;
     for (var i = 0, len = text.length; i < len; i++) {
         var code = text.charCodeAt(i);
         if((code >= 0x0 && code < 0x81) || (code == 0xf8f0) || (code >= 0xff61 && code < 0xffa0) || (code >= 0xf8f1 && code < 0xf8f4)){

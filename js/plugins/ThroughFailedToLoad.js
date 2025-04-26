@@ -25,7 +25,7 @@
  *
  * @param InvalidIfTest
  * @desc Not through if test play.
- * @default false
+ * @default true
  * @type boolean
  *
  * @param InvalidIfWeb
@@ -55,7 +55,7 @@
  *
  * @param テストプレー時無効
  * @desc テストプレー時は本プラグインの機能が無効になります。
- * @default false
+ * @default true
  * @type boolean
  *
  * @param Web版で無効

@@ -40,7 +40,6 @@ var $gameTroop        = null;
 var $gameMap          = null;
 var $gamePlayer       = null;
 var $testEvent        = null;
-var $p = true;
 
 DataManager._globalId       = 'RPGMV';
 DataManager._lastAccessedId = 1;
